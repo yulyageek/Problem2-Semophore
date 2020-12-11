@@ -33,7 +33,7 @@ int main(int argc, char *argv[]){
         key_t shm_key;
 	key_t sem_key;
 	struct sembuf sops[5];
-        if ( (shm_key = ftok(path, 0)) == -1){
+        if ( (shm_key = ftok(path, 1)) == -1){
 		printf("ftok error\n");
 		exit (errno);
        	}
