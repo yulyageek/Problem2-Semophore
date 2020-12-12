@@ -9,15 +9,23 @@
 #include <sys/sem.h>
 #include <errno.h>
 
-#define path "/home/yulya/kt/state.txt"
 #define max_size 4096
-
+#define N 50
+char dir[N];
 int main(int argc, char *argv[]){
 
 	if(argc < 2){
 		printf("Usage: %s path_to_file", argv[0]);
 		exit (-1);
 	}
+
+	if (getcwd(dir, N) == NULL) {
+		printf("getcwd error\n");
+			exit(errno);
+	}
+	char path[N];
+	
+	sprintf(path, "%s/for_yulya.txt", dir);
 
 	struct stat *about_file = (struct stat *) malloc (sizeof(struct stat));
 	if (!about_file){
@@ -96,17 +104,22 @@ int main(int argc, char *argv[]){
 		       		printf("semctl error\n");
 				exit(errno);
 	       		}
-			
-			if (errno == EAGAIN) printf("other process died!\n");
-			else printf("semop2 error\n");
+			free(about_file);
+			if ( remove(path) == -1){
+				printf("remove file error\n");
+				exit(errno);
+
+			if (errno != EAGAIN)
+				printf("semop2 error\n");
 			exit(errno);
 	       	}
-
-		if ( read(fd, buf+i, 1) != 1){
+		sleep(1);
+		int rd = read(fd, buf, max_size);
+		if (rd  != max_size){
+			*(buf + rd) = '\0';
 			exit(-1);			
 		}	
 		i++;
-		sleep(1);
 		sops[0].sem_num = 1;
 		sops[0].sem_op = 1;
 		sops[0].sem_flg = 0;	
