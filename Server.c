@@ -9,10 +9,20 @@
 #include <sys/sem.h>
 #include <errno.h>
 
-#define path "/home/yulya/kt/state.txt"
 #define max_size 4096
+#define N 50
+char dir[N];
+int main(int argc, char *argv[]){
 
-int main(){
+	if (getcwd(dir, N) == NULL) {
+		printf("getcwd error\n");
+			exit(errno);
+	}
+	char path[N];
+	
+	sprintf(path, "%s/for_yulya.txt", dir);
+
+	open(path, O_CREAT);
 
         key_t shm_key;
 	key_t sem_key;
@@ -81,22 +91,22 @@ int main(){
 		       	}
 			
 			if ( semctl( sem_id, 0, 0) == -1){
-		       		printf("semctl error\n");
+		       		printf("semctl error\n"); 
 				exit(errno);
 	       		}
-			
-			if (*(buf + i) == feof){
-				printf("read end\n");
-				exit (0);
+
+			if ( remove(path) == -1){
+				printf("remove file error\n");
+				exit(errno);
 			}
+			
 			if (errno != EAGAIN){
 				printf("semop1 error\n");
 			}
 			exit(errno);
 	       	}	
 		
-		printf( "%c", *(buf+i) );   
-		i++;
+		printf( "%s", buf );   
 		sops[0].sem_num = 0;
 		sops[0].sem_op = 1;
 		sops[0].sem_flg = 0;
