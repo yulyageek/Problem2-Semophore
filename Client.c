@@ -40,7 +40,7 @@ int main(int argc, char *argv[]){
 
         key_t shm_key;
 	key_t sem_key;
-	struct sembuf sops[5];
+	struct sembuf sops[4];
         if ( (shm_key = ftok(path, 1)) == -1){
 		printf("ftok error\n");
 		exit (errno);
@@ -82,11 +82,11 @@ int main(int argc, char *argv[]){
 		sops[0].sem_flg = 0;
 
 		sops[1].sem_num = 1;
-		sops[1].sem_op = 1;
+		sops[1].sem_op = 2;
 		sops[1].sem_flg = 0;
 
 		sops[2].sem_num = 1;
-		sops[2].sem_op = -1;
+		sops[2].sem_op = -2;
 		sops[2].sem_flg = SEM_UNDO;
 
 		sops[3].sem_num = 1;
@@ -108,12 +108,11 @@ int main(int argc, char *argv[]){
 			if ( remove(path) == -1){
 				printf("remove file error\n");
 				exit(errno);
-
+			}
 			if (errno != EAGAIN)
 				printf("semop2 error\n");
 			exit(errno);
 	       	}
-		sleep(1);
 		int rd = read(fd, buf, max_size);
 		if (rd  != max_size){
 			*(buf + rd) = '\0';
