@@ -72,11 +72,11 @@ int main(int argc, char *argv[]){
 		sops[0].sem_flg = 0;  
 
 		sops[1].sem_num = 0;
-		sops[1].sem_op = 1;
+		sops[1].sem_op = 2;
 		sops[1].sem_flg = 0;
 
 		sops[2].sem_num = 0;
-		sops[2].sem_op = -1;
+		sops[2].sem_op = -2;
 		sops[2].sem_flg = SEM_UNDO;  
 
 		sops[3].sem_num = 0;
