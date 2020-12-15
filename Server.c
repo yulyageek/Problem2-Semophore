@@ -9,8 +9,10 @@
 #include <sys/sem.h>
 #include <errno.h>
 
-#define max_size 4096
-#define N 50
+#define page_size 4096
+#define N 256
+#define size 12
+
 char dir[N];
 int main(int argc, char *argv[]){
 
@@ -38,7 +40,7 @@ int main(int argc, char *argv[]){
        	}
 
        	int shm_id;
-       	if ( (shm_id =  shmget(shm_key, max_size, IPC_CREAT|0666)) == -1){
+       	if ( (shm_id =  shmget(shm_key, page_size+size+1, IPC_CREAT|0666)) == -1){
 		printf("shmget error\n");
 		exit(errno);
        	}
@@ -106,7 +108,19 @@ int main(int argc, char *argv[]){
 			exit(errno);
 	       	}	
 		
-		printf( "%s", buf );   
+		int need_size = 0;
+		int two_power = 1;
+		for (int i = 1; i<=12; i++){
+			if ( *(buf+size-i) == '1'){
+				need_size += two_power;
+			}
+			two_power = two_power * 2;
+		}
+		if ((write(1, buf+size, need_size)) == -1) {
+			printf("write error\n");
+			exit(errno);
+		}
+ 
 		sops[0].sem_num = 0;
 		sops[0].sem_op = 1;
 		sops[0].sem_flg = 0;
