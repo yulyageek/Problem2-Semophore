@@ -11,7 +11,7 @@
 
 #define page_size 4096
 #define N 256
-#define size 12
+#define size 13
 char dir[N];
 int main(int argc, char *argv[]){
 
@@ -115,16 +115,17 @@ int main(int argc, char *argv[]){
 			exit(errno);
 	       	}
 		int rd = read(fd, buf+size, page_size);
+		int new_rd = rd;
 		if( rd  == -1){
 			printf("read from file error\n");
 			exit (errno);
 		}
-		for (int i = 1; i <= 12; i ++){
-			if (rd % 2 == 0)
+		for (int i = 1; i <= size; i ++){
+			if (new_rd % 2 == 0)
 				*(buf + size - i) = '0';
 			else
 				*(buf + size - i) = '1';
-			rd = rd / 2;
+			new_rd = new_rd / 2;
 		}
 		if( rd == 0){
 			break;
