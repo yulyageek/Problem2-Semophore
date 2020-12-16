@@ -11,7 +11,7 @@
 
 #define page_size 4096
 #define N 256
-#define size 12
+#define size 13
 
 char dir[N];
 int main(int argc, char *argv[]){
@@ -110,7 +110,7 @@ int main(int argc, char *argv[]){
 		
 		int need_size = 0;
 		int two_power = 1;
-		for (int i = 1; i<=12; i++){
+		for (int i = 1; i <= size; i++){
 			if ( *(buf+size-i) == '1'){
 				need_size += two_power;
 			}
@@ -120,7 +120,6 @@ int main(int argc, char *argv[]){
 			printf("write error\n");
 			exit(errno);
 		}
- 
 		sops[0].sem_num = 0;
 		sops[0].sem_op = 1;
 		sops[0].sem_flg = 0;
